@@ -1,0 +1,200 @@
+<html>
+  <head>
+    <title>Demo</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/jquery-3.1.0.js" type="application/javascript"></script>
+    <script type="application/javascript" src="js/bootstrap.js"></script>
+    <script type="application/javascript" src="js/bootstrap-treeview.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/bootstrap-treeview.css" rel="stylesheet"/>
+    <script type="application/javascript" src="js/bootstrap-combotree.js"></script>
+    <script type="application/javascript">
+      //节点的nodeid, parentId, state, searchResult, selectable, 已被插件占用，为防止出现冲突，请不要自行为这两个属性赋值
+      var defaultData = [
+        {
+          text: 'Parent 1',
+          id : 'p1',
+          nodes: [
+            {
+              text: 'Child 1',
+              id : 'C1',
+              nodes: [
+                {
+                  text: 'Grandchild 1',
+                  id : 'g1',
+                },
+                {
+                  text: 'Grandchild 2',
+                  id : 'g2',
+                }
+              ]
+            },
+            {
+              text: 'Child 2',
+              id : 'C2',
+            }
+          ]
+        },
+        {
+          text: 'Parent 2',
+          id : 'p2',
+          nodes: [
+            {
+              text: 'Child 3',
+              id : 'C3',
+              nodes: [
+                {
+                  text: 'Grandchild 3',
+                  id : 'g3',
+                },
+                {
+                  text: 'Grandchild 4',
+                  id : 'g4',
+                }
+              ]
+            },
+            {
+              text: 'Child 4',
+              id : 'C4',
+            }
+          ]
+        },
+        {
+          text: 'Parent 3',
+          id : 'p3',
+        },
+        {
+          text: 'Parent 4',
+          id : 'p4',
+        },
+        {
+          text: 'Parent 5',
+          id : 'p5',
+        }
+      ];
+      $(function () {
+        $("#combotree1").bootstrapCombotree({
+          defaultLable : '请选择列表',//默认按钮上的文本
+          data: defaultData,//data应符合实例的data格式
+          showIcon: true,//显示图标
+          width : 400,//下拉列表宽度
+          name : 'list',//combotree值域的name，可以用在表单提交
+          maxItemsDisplay : 1,//按钮上最多显示多少项，如果超出这个数目，将会以‘XX项已被选中代替’
+          selectToCheck : true,//为了兼容移动设备，点击属性菜单项时自动选中节点
+          onCheck : function (node) {//树形菜单被选中时触发事件, node为选中的那个节点
+            alert("我已选中项" + node.text);
+          },
+          onBeforeCheck : function (node) {//树形菜单被选中前触发事件, node为选中的那个节点
+            alert("我还没有选中项" + node.text + ",但其即将被选中");
+          },
+          onBeforeUnCheck : function (node) {//树形菜单被取消选中前触发事件, node为选中的那个节点
+            alert("我还没有取消选中项" + node.text + ",其将会被取消选中");
+          },
+          onUnCheck : function (node) {////树形菜单被取消选中时触发事件, node为选中的那个节点
+            alert("我取消选中项" + node.text);
+          }
+
+        })
+        $("#btn1").on("click", function () {
+            alert($("#combotree1").bootstrapCombotree("getValue"));
+        });
+        $("#btn12").on("click", function () {
+          $("#combotree1").bootstrapCombotree("setValue", "g1,g2,g3,g4");
+        })
+        $("#combotree2").bootstrapCombotree({
+          defaultLable : '请选择列表',//默认按钮上的文本
+          data: defaultData,//data应符合实例的data格式
+          showIcon: true,//显示图标
+          width : 400,//下拉列表宽度
+          name : 'list',//combotree值域的name，可以用在表单提交
+          maxItemsDisplay : 1,//按钮上最多显示多少项，如果超出这个数目，将会以‘XX项已被选中代替’
+          selectToCheck : true,//为了兼容移动设备，点击属性菜单项时自动选中节点
+          onCheck : function (node) {//树形菜单被选中时触发事件, node为选中的那个节点
+            alert("我已选中项" + node.text);
+          },
+          onBeforeCheck : function (node) {//树形菜单被选中前触发事件, node为选中的那个节点
+            alert("我还没有选中项" + node.text + ",但其即将被选中");
+          },
+          onBeforeUnCheck : function (node) {//树形菜单被取消选中前触发事件, node为选中的那个节点
+            alert("我还没有取消选中项" + node.text + ",其将会被取消选中");
+          },
+          onUnCheck : function (node) {////树形菜单被取消选中时触发事件, node为选中的那个节点
+            alert("我取消选中项" + node.text);
+          }
+
+        })
+        $("#btn2").on("click", function () {
+          alert($("#combotree2").bootstrapCombotree("getValue"));
+        });
+        $("#btn22").on("click", function () {
+          $("#combotree2").bootstrapCombotree("setValue", "g1,g2,g3,g4");
+        })
+      })
+    </script>
+
+  </head>
+  <body>
+    <div style="margin-top: 200px" class="container-fluid">
+      <div class="row">
+        <div class="col-lg-4 col-md-2 col-sm-2"></div>
+        <div class="col-lg-4 col-md-8 col-sm-8 col-xs-12">
+          <form role="form" action="test.jsp" >
+            <fieldset>
+              <legend>BootStrapComboTree表单提交测试</legend>
+              <table width="100%">
+                <tr style="height: 100px">
+                  <td style="width: 20%">姓名:</td>
+                  <td> <input type="text" class="form-control" placeholder="姓名" name="name"></td>
+                </tr>
+                <tr style="height: 100px">
+                  <td style="width: 20%">请选择节点:</td>
+                  <td s><div id="combotree1" style="float: left"></div>
+                    <div style="float: right">
+                      <button id="btn1" class="btn btn-default" type="button">获取值</button>
+                      <button id="btn12" class="btn btn-default" type="button">设置值</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr style="height: 100px">
+                  <td style="width: 20%"></td>
+                  <td>
+                    <button type="submit" class="btn btn-success" style="float: right; margin-right: 20px">提交</button>
+                  </td>
+                </tr>
+              </table>
+            </fieldset>
+          </form>
+          <form role="form" action="test.jsp" >
+            <fieldset>
+              <legend>BootStrapComboTree表单提交测试</legend>
+              <table width="100%">
+                <tr style="height: 100px">
+                  <td style="width: 20%">姓名:</td>
+                  <td> <input type="text" class="form-control" placeholder="姓名" name="name"></td>
+                </tr>
+                <tr style="height: 100px">
+                  <td style="width: 20%">请选择节点:</td>
+                  <td s><div id="combotree2" style="float: left"></div>
+                    <div style="float: right">
+                      <button id="btn2" class="btn btn-default" type="button">获取值</button>
+                      <button id="btn22" class="btn btn-default" type="button">设置值</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr style="height: 100px">
+                  <td style="width: 20%"></td>
+                  <td>
+                    <button type="submit" class="btn btn-success" style="float: right; margin-right: 20px">提交</button>
+                  </td>
+                </tr>
+              </table>
+            </fieldset>
+          </form>
+        </div>
+        <div class="col-lg-4 col-md-2 col-sm-2"></div>
+      </div>
+    </div>
+  </body>
+</html>
