@@ -8,6 +8,76 @@
         var $Tree;//Tree对象
         var $Button;//button对象
         var $hidden;//隐藏域
+        //选择节点
+        var checkNode = function (node) {
+            var result = options.onBeforeCheck(node);
+            if(result == false)
+            {
+                return;
+            }
+            if($Button.innerText == options.defaultLable)
+            {
+                $Button.innerText = '';
+            }
+            setCheck(node) ;
+            setCheckparent(node);
+            if (text.length <= options.maxItemsDisplay) {
+                $Button.html(text + '<span class="caret"></span>');
+                $Button.attr("title", text);
+            }
+            else {
+                $Button.html(text.length + '项被选中  <span class="caret"></span>');
+                $Button.attr("title", text.length + '项被选中');
+            }
+            $hidden.val(value);
+            options.onCheck(node);
+        };
+        //取消选择节点
+        var unCheckNode = function (node) {
+            var result = options.onBeforeUnCheck(node);
+            if(result == false)
+            {
+                return;
+            }
+            setUnCheck(node);
+            setunCheckparent(node);
+            if (text.length == 0) {
+                $Button.html(options.defaultLable + '<span class="caret"></span>');
+                $Button.attr("title", options.defaultLable);
+            }
+            else {
+                if (text.length <= options.maxItemsDisplay) {
+                    $Button.html(text + '<span class="caret"></span>');
+                    $Button.attr("title", text);
+                }
+                else {
+                    $Button.html(text.length + '项被选中 <span class="caret"></span>');
+                    $Button.attr("title", text.length + '项被选中');
+                }
+            }
+            $hidden.val(value);
+            options.onUnCheck(node);
+        };
+        //被选中的节点
+        var selectedNode = undefined;
+        var selectNode = function (node) {
+            if(options.selectToCheck)
+            {
+                if(!node.state.checked)
+                {
+                    checkNode(node);
+                }
+            }
+        };
+        var unSelectNode = function (node) {
+            if(options.selectToCheck)
+            {
+                if(node.state.checked)
+                {
+                    unCheckNode(node);
+                }
+            }
+        };
         function init(target) {
             $(target).empty();
             //写html标签
@@ -38,94 +108,25 @@
                 showIcon: options.showIcon,
                 showCheckbox: true,
                 onNodeChecked: function (event, node) {
-                    if(!options.onBeforeCheck(node))
-                    {
-                        return;
-                    }
-                    if($Button.innerText == options.defaultLable)
-                    {
-                        $Button.innerText = '';
-                    }
-                    setCheck(node) ;
-                    setCheckparent(node);
-                    if (text.length <= options.maxItemsDisplay) {
-                        $Button.html(text + '<span class="caret"></span>');
-                        $Button.attr("title", text);
-                    }
-                    else {
-                        $Button.html(text.length + '项被选中  <span class="caret"></span>');
-                        $Button.attr("title", text.length + '项被选中');
-                    }
-                    $hidden.val(value);
-                    options.onCheck(node);
+                    checkNode(node);
                 },
                 onNodeUnchecked: function (event, node) {
-                    options.onBeforeUnCheck(node);
-                    setUnCheck(node);
-                    setunCheckparent(node);
-                    if (text.length == 0) {
-                        $Button.html(options.defaultLable + '<span class="caret"></span>');
-                        $Button.attr("title", options.defaultLable);
-                    }
-                    else {
-                        if (text.length <= options.maxItemsDisplay) {
-                            $Button.html(text + '<span class="caret"></span>');
-                            $Button.attr("title", text);
-                        }
-                        else {
-                            $Button.html(text.length + '项被选中 <span class="caret"></span>');
-                            $Button.attr("title", text.length + '项被选中');
-                        }
-                    }
-                    $hidden.val(value);
-                    options.onUnCheck(node);
+                    unCheckNode(node);
                 },
                 onNodeSelected : function (event, node) {
-                    if(options.selectToCheck)
+                    selectNode(node);
+                    selectedNode = node;
+                },
+                onNodeUnselected : function (event, node) {
+                    if(selectedNode.id == node.id)
                     {
-                        if(node.state.checked)
-                        {
-                            options.onBeforeUnCheck(node);
-                            setUnCheck(node);
-                            setunCheckparent(node);
-                            if (text.length == 0) {
-                                $Button.html(options.defaultLable + '<span class="caret"></span>');
-                                $Button.attr("title", options.defaultLable);
-                            }
-                            else {
-                                if (text.length <= options.maxItemsDisplay) {
-                                    $Button.html(text + '<span class="caret"></span>');
-                                    $Button.attr("title", text);
-                                }
-                                else {
-                                    $Button.html(text.length + '项被选中 <span class="caret"></span>');
-                                    $Button.attr("title",text.length + '项被选中');
-                                }
-                            }
-                            $hidden.val(value);
-                            options.onUnCheck(node);
-                        }
-                        else
-                        {
-                            options.onBeforeCheck(node);
-                            if($Button.innerText == options.defaultLable)
-                            {
-                                $Button.innerText = '';
-                            }
-                            setCheck(node) ;
-                            setCheckparent(node);
-                            if (text.length <= options.maxItemsDisplay) {
-                                $Button.html(text + '<span class="caret"></span>');
-                                $Button.attr("title", text);
-                            }
-                            else {
-                                $Button.html(text.length + '项被选中  <span class="caret"></span>');
-                                $Button.attr("title", text.length + '项被选中');
-                            }
-                            $hidden.val(value);
-                            options.onCheck(node);
-                        }
+                        unSelectNode(node);
                     }
+                    else
+                    {
+                        selectedNode = undefined;
+                    }
+
                 }
             });
             var dropclick = false;
